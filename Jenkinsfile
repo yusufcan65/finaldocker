@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Docker image'ını oluştur
-                    bat 'docker build -t demo/app:%BUILD_NUMBER% build/web'
+                    bat 'docker build -t yusuf/app:%BUILD_NUMBER% build/web'
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Docker container'ı çalıştır
-                    bat 'docker run -d -p 1515:8080 --name demo-container demo/app:%BUILD_NUMBER%'
+                    bat 'docker run -d -p 1515:8080 --name demo-container yusuf/app:%BUILD_NUMBER%'
                 }
             }
         }

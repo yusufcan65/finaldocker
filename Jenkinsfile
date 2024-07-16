@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Docker container'ı çalıştır
-                    bat 'docker run -d -p 1515:8080 --name demo-container demo/app:%BUILD_NUMBER%'
+                    bat 'docker run -d -p 2020:8080 --name demo-container demo/app:%BUILD_NUMBER%'
                 }
             }
         }

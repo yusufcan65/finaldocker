@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     // Docker container'ı çalıştır
-                    docker.image("demo/app:${env.BUILD_NUMBER}").run("-d -p 1515:8080 --name demo-container")
+                    docker.image("demo/app:${env.BUILD_NUMBER}").run("-d -p 5555:1515 --name demo-container")
                 }
             }
         }

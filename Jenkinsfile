@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Docker image'ını oluştur
-                    bat 'docker build -t demo/app:%BUILD_NUMBER% build/web'
+                    bat 'docker build -t demo/app:%BUILD_NUMBER% web'
                 }
             }
         }

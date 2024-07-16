@@ -4,20 +4,25 @@ pipeline {
         stage('Checkout') {
             steps {
                 // GitHub'dan kodları checkout et
-                checkout scmGit(
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[url: 'https://github.com/yusufcan65/finaldocker.git']]
-                )
+                git branch: 'main', url: 'https://github.com/yusufcan65/finaldocker.git'
             }
         }
 
-        
+        stage('Stop and Remove Existing Container') {
+            steps {
+                script {
+                    // Varolan container'ı durdur ve sil
+                    bat 'docker stop demo-container || exit 0'
+                    bat 'docker rm demo-container || exit 0'
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
                 script {
                     // Docker image'ını oluştur
-                    docker.build("demo/app:${env.BUILD_NUMBER}")
+                    bat 'docker build -t demo/app:%BUILD_NUMBER% build/web'
                 }
             }
         }
@@ -26,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Docker container'ı çalıştır
-                    docker.image("demo/app:${env.BUILD_NUMBER}").run("-d -p 5555:1515 --name demo-container")
+                    bat 'docker run -d -p 1515:8080 --name demo-container demo/app:%BUILD_NUMBER%'
                 }
             }
         }

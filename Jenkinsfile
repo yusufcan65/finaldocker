@@ -1,50 +1,46 @@
 pipeline {
     agent any
+    tools {
+        maven 'maven'
+    }
     stages {
-        stage('Checkout') {
+        stage('Build Maven') {
             steps {
-                // GitHub'dan kodları checkout et
                 checkout scmGit(
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[url: 'https://github.com/yusufcan65/finaldocker.git']]
                 )
+                bat 'mvn clean install'
             }
         }
-
         stage('Stop and Remove Existing Container') {
-            steps {
-                script {
-                    // Varolan container'ı durdur ve sil
-                    bat """
-                    docker stop demo-container
-                    IF %ERRORLEVEL% NEQ 0 (
-                        echo Container durdurulamadı veya zaten yok
-                    )
-                    docker rm demo-container
-                    IF %ERRORLEVEL% NEQ 0 (
-                        echo Container silinemedi veya zaten yok
-                    )
-                    """
-                }
-            }
-        }
+                                             steps {
+                                                 script {
+                                                   // Varolan container'ı durdur ve sil
+                                                            bat 'docker stop demo-container '
+                                                            bat 'docker rm demo-container'
+                                                        }
+                                                   }
+                                        }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Docker image'ını oluştur
+        stage('Build docker image'){
+            steps{
+                script{
                     docker.build("demo/app:${env.BUILD_NUMBER}")
                 }
             }
         }
 
+
+
         stage('Run Docker Container') {
-            steps {
-                script {
-                    // Docker container'ı çalıştır
-                    docker.image("demo/app:${env.BUILD_NUMBER}").run("-d -p 1010:1515 --name demo-container")
+                    steps {
+                        script {
+                            docker.image("demo/app:${env.BUILD_NUMBER}").run("-d -p 1515:8080 --name demo-container")
+                        }
+                    }
                 }
-            }
-        }
+
     }
+
 }
